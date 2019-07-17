@@ -11,44 +11,30 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-
-@Configuration
-// @ComponentScan({"edu.educacionit"})
-class AppConfig {
-    
-    @Bean(name="servicioSaludo")
-    public ISaludo obtenerSaludo() {
-        /*
-        if (System.getProperty("amort")==null) {
-            throw new RuntimeException("Vino null");
-        }
-        */
-        return new Saludo();
-    }
-}
-
-interface ISaludo {
-    void saludar();
-}
-
-class Saludo implements ISaludo {
-    public void saludar() {
-        System.out.println("Bienvenido al sistema de amortizacion");
-    }
-}
-
-public class App 
+public class App
 {
     public static void main( String[] args )
     {
         ApplicationContext appContext =
                 new AnnotationConfigApplicationContext(AppConfig.class);
         
-        ISaludo saludo =
-                appContext.getBean("servicioSaludo", Saludo.class);
+        CalculadorCuota calculadorCuota = null;
         
-        saludo.saludar();
+        String tipoAmortizacion = System.getProperty("tipoAmortizacion");        
+        RuntimeException error = new RuntimeException("No se encuentra tipo amortizacion");
         
-        System.out.println(System.getProperty("tipoAmortizacion"));
+        if (tipoAmortizacion==null) { throw error; }
+        
+        if (tipoAmortizacion.equals("americano")) {
+            calculadorCuota = appContext.getBean("calculadorSistemaAmericano", CalculadorCuota.class);
+        }
+        
+        if (tipoAmortizacion.equals("aleman")) {
+            calculadorCuota = appContext.getBean("calculadorSistemaAleman", CalculadorCuota.class);
+        }
+        
+        if (calculadorCuota==null) { throw error; }
+        
+        calculadorCuota.mostrarCuotas();
     }
 }
