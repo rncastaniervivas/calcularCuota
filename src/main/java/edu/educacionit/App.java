@@ -33,7 +33,7 @@ interface ISaludo {
 
 class Saludo implements ISaludo {
     public void saludar() {
-        System.out.println("S A L U D O  A  T O D O S ! ! ! ! ");
+        System.out.println("Bienvenido al sistema de amortizacion");
     }
 }
 
